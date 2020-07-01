@@ -15,5 +15,7 @@ flutter state view with loading，empty，error show
         ),
         
 效果图如下：<br/>
-
+![image](https://img-blog.csdnimg.cn/20200701170651627.jpg)
+![image](https://img-blog.csdnimg.cn/20200701170651704.jpg)
+![image](https://img-blog.csdnimg.cn/20200701170651697.jpg)
 ## Getting Started
