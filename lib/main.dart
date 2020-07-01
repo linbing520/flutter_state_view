@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_state_view/state_view.dart';
 
-import 'pager_list.dart';
+import 'state_view.dart';
 
 void main() => runApp(ExampleApp());
 
@@ -22,122 +23,46 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  ScrollController _controller;
 
+  var state = LoadState.State_Loading;
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
+
+    this.changeLoadingState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+  }
+  
+  void changeLoadingState() {
+    Future.delayed(Duration(seconds: 3)).then((value) {
+      this.setState(() {
+        state=LoadState.State_Error;
+      });
+
+    });
+  }
+
+  void onRetry(bool iserror) {
+    this.setState(() {
+      state=LoadState.State_Loading;
+    });
+    this.changeLoadingState();
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: PagerListView(
-          headerBuilder: headerBuilder,
-//          footerBuilder: footerBuilder,
-          itemBuilder: itemBuilder,
-          pagerBuilder: pageBuilder,
-          useLoadMore: true,
-          pageSize:20,
+        body:StateView(
+          state: state,
+          loadingLabel:'加载中...',
+          emptyLabel: '空空如也',
+          errorLabel: '我错了',
+          onRetry: this.onRetry,
+          child: Text('成功页面！'),
         ),
       );
 
-
-  var headerBuilder = (context) => Container(
-        color: Colors.blue,
-        height: 100.0,
-        alignment: AlignmentDirectional.center,
-        child: Text(
-          "This is header",
-          style: TextStyle(
-            fontSize: 24.0,
-            color: Colors.white,
-          ),
-        ),
-      );
-
-  var footerBuilder = (context) => Container(
-        color: Colors.green,
-        height: 100.0,
-        alignment: AlignmentDirectional.center,
-        child: Text(
-          "This is footer",
-          style: TextStyle(
-            fontSize: 24.0,
-            color: Colors.white,
-          ),
-        ),
-      );
-
-  static List<Widget> sliverItems = List.generate(
-    10,
-    (index) => Container(
-          color: Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0)
-              .withOpacity(1.0),
-          padding: EdgeInsets.all(8.0),
-          height: 60.0,
-          alignment: AlignmentDirectional.center,
-          child: Text(
-            "This is sliver item \nin CustomScrollView",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-  );
-
-  var itemBuilder = (context,data, index) =>  Container(
-            height: 60.0,
-            alignment: AlignmentDirectional.center,
-            child: Text(
-              data,
-              style: TextStyle(color: Colors.black87),
-            ),
-        );
-
-
-  Future<List<String>> pageBuilder(int page,List currentDatas) async {
-    await Future.delayed(Duration(seconds: 0, milliseconds: 2000));
-    List<String> dummyList = List();
-    //测试第三页加载失败
-    if(page == 3) {
-      throw FormatException('处理失败，请重试');
-    }
-
-    // 测试空数据
-//   if(page == 1) {
-//     return dummyList;
-//   }
-
-    int start = 0;
-    if(currentDatas != null && page > 1) {
-      start = currentDatas.length;
-    }
-    for (int i = start; i < start + 20; i++) {
-      dummyList.add('Item $i');
-    }
-    return dummyList;
-  }
-
-  var headerSliverBuilder = (context, _) => [
-        SliverAppBar(
-          expandedHeight: 120.0,
-          pinned: true,
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          flexibleSpace: FlexibleSpaceBar(
-            centerTitle: true,
-            title: Container(
-              child: Text(
-                "Sliver App Bar",
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ),
-        ),
-      ];
 }
