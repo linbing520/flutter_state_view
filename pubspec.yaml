@@ -1,6 +1,6 @@
 name: flutter_state_view
 description: flutter state view with loading，empty，error show
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/wiliemus/flutter_state_view
 
 # The following line prevents the package from being accidentally published to
