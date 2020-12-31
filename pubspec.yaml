@@ -1,7 +1,7 @@
 name: flutter_state_view
 description: flutter state view with loading，empty，error show
-version: 0.0.2
-homepage: https://github.com/wiliemus/flutter_state_view
+version: 0.0.5
+homepage: https://github.com/linbing520/flutter_state_view
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -29,7 +29,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.3
+  #cupertino_icons: ^0.1.3
 
 dev_dependencies:
   flutter_test:

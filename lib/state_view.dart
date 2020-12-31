@@ -233,3 +233,104 @@ class StateViewState extends State<StateView> {
 
   }
  }
+
+
+
+extension page_state_widget on Widget{
+
+  ///页面加载中
+  Widget pageStateLoading() {
+    String msgShow = '加载中...';
+    return StateView(
+      state:  LoadState.State_Loading,
+      loadingLabel:msgShow,
+      emptyLabel: '空空如也',
+      errorLabel: '未知错误',
+      child: this,
+    );
+  }
+
+  ///页面加载中
+  Widget pageStateLoadingWithMsg(String msg) {
+    String msgShow = '加载中...';
+    if(msg != null) {
+      msgShow = msg;
+    }
+    return StateView(
+      state:  LoadState.State_Loading,
+      loadingLabel:msgShow,
+      emptyLabel: '空空如也',
+      errorLabel: '未知错误',
+      child: this,
+    );
+  }
+
+  ///页面加载成功
+  Widget pageStateSuccess() {
+    return StateView(
+      state:  LoadState.State_Success,
+      loadingLabel:'加载中...',
+      emptyLabel: '空空如也',
+      errorLabel: '未知错误',
+      child: this,
+    );
+  }
+
+  ///页面加载失败
+  Widget pageStateError() {
+    String msgShow = '未知错误';
+    return StateView(
+      state:  LoadState.State_Error,
+      loadingLabel:'加载中...',
+      emptyLabel: '空空如也',
+      errorLabel: msgShow,
+      child: this,
+    );
+  }
+
+  ///页面加载失败
+  Widget pageStateErrorWithRetry(String msg,Function onRetry) {
+    String msgShow = '未知错误';
+    if(msg != null) {
+      msgShow = msg;
+    }
+    return StateView(
+      state:  LoadState.State_Error,
+      loadingLabel:'加载中...',
+      emptyLabel: '空空如也',
+      errorLabel: msgShow,
+      onRetry:onRetry,
+      child: this,
+    );
+  }
+
+
+  ///页面加载空数据
+  Widget pageStateEmpty() {
+    String msgShow = '空空如也';
+    return StateView(
+      state:  LoadState.State_Empty,
+      loadingLabel:'加载中...',
+      emptyLabel: msgShow,
+      errorLabel: '未知错误',
+      child: this,
+    );
+  }
+
+  ///页面加载空数据
+  Widget pageStateEmptyWithRetry(String msg,Function onRetry) {
+    String msgShow = '空空如也';
+    if(msg != null) {
+      msgShow = msg;
+    }
+    return StateView(
+      state:  LoadState.State_Empty,
+      loadingLabel:'加载中...',
+      emptyLabel: msgShow,
+      errorLabel: '未知错误',
+      onRetry:onRetry,
+      child: this,
+    );
+  }
+
+}
