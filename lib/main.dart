@@ -23,8 +23,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-
+  GlobalKey _key = GlobalKey();
   var state = LoadState.State_Loading;
+
   @override
   void initState() {
     super.initState();
@@ -39,30 +40,21 @@ class MyHomePageState extends State<MyHomePage> {
   
   void changeLoadingState() {
     Future.delayed(Duration(seconds: 3)).then((value) {
-      this.setState(() {
-        state=LoadState.State_Error;
+      _key.currentState.setState((){
+        state=LoadState.State_Success;
       });
-
     });
   }
 
   void onRetry(bool iserror) {
-    this.setState(() {
-      state=LoadState.State_Loading;
-    });
     this.changeLoadingState();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body:StateView(
-          state: state,
-          loadingLabel:'加载中...',
-          emptyLabel: '空空如也',
-          errorLabel: '我错了',
-          onRetry: this.onRetry,
-          child: Text('成功页面！'),
-        ),
-      );
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body:Text('成功页面！').pageStateLoading(_key)
+    );
+  }
 
 }

@@ -13,7 +13,7 @@ enum LoadState { State_Success, State_Error, State_Loading, State_Empty }
 ///根据不同状态来展示不同的视图
 class StateView extends StatefulWidget {
 
-  final LoadState state; //页面状态
+  LoadState state; //页面状态
   final Widget child;//成功视图
   final RetryCallback onRetry; //重试
   final String errorLabel; //失败的自定义提示
@@ -26,7 +26,7 @@ class StateView extends StatefulWidget {
   final LoadingViewBuilder loadingViewBuilder; //自定义加载中
   final EmptyViewBuilder emptyViewBuilder; //自定义空界面
   final ErrorViewBuilder errorViewBuilder; //自定义错误页面
-
+  State mState;
 
   StateView(
       {Key key,
@@ -47,7 +47,28 @@ class StateView extends StatefulWidget {
         super(key: key);
 
   @override
-  StateViewState createState() => StateViewState();
+  StateViewState createState() {
+    mState = StateViewState();
+    return mState;
+  }
+
+  void pageStateLoading() {
+    state = LoadState.State_Loading;
+    GlobalKey gkey = key;
+    gkey.currentState.setState(() {
+      state = LoadState.State_Loading;
+    });
+  }
+
+  void pageStateSuccess() {
+    state = LoadState.State_Success;
+    GlobalKey gkey = key;
+    gkey.currentState.setState(() {
+      state = LoadState.State_Success;
+    });
+  }
+
+
 }
 
 class StateViewState extends State<StateView> {
@@ -238,10 +259,14 @@ class StateViewState extends State<StateView> {
 
 extension page_state_widget on Widget{
 
+
+
+
   ///页面加载中
-  Widget pageStateLoading() {
+  Widget pageStateLoading(GlobalKey key) {
     String msgShow = '加载中...';
     return StateView(
+      key:key,
       state:  LoadState.State_Loading,
       loadingLabel:msgShow,
       emptyLabel: '空空如也',
@@ -251,12 +276,13 @@ extension page_state_widget on Widget{
   }
 
   ///页面加载中
-  Widget pageStateLoadingWithMsg(String msg) {
+  Widget pageStateLoadingWithMsg(GlobalKey key,String msg) {
     String msgShow = '加载中...';
     if(msg != null) {
       msgShow = msg;
     }
     return StateView(
+      key:key,
       state:  LoadState.State_Loading,
       loadingLabel:msgShow,
       emptyLabel: '空空如也',
@@ -266,8 +292,9 @@ extension page_state_widget on Widget{
   }
 
   ///页面加载成功
-  Widget pageStateSuccess() {
+  Widget pageStateSuccess(GlobalKey key) {
     return StateView(
+      key:key,
       state:  LoadState.State_Success,
       loadingLabel:'加载中...',
       emptyLabel: '空空如也',
@@ -277,9 +304,10 @@ extension page_state_widget on Widget{
   }
 
   ///页面加载失败
-  Widget pageStateError() {
+  Widget pageStateError(GlobalKey key) {
     String msgShow = '未知错误';
     return StateView(
+      key:key,
       state:  LoadState.State_Error,
       loadingLabel:'加载中...',
       emptyLabel: '空空如也',
@@ -289,12 +317,14 @@ extension page_state_widget on Widget{
   }
 
   ///页面加载失败
-  Widget pageStateErrorWithRetry(String msg,Function onRetry) {
+  Widget pageStateErrorWithRetry(GlobalKey key,String msg,Function onRetry) {
     String msgShow = '未知错误';
     if(msg != null) {
       msgShow = msg;
     }
+
     return StateView(
+      key:key,
       state:  LoadState.State_Error,
       loadingLabel:'加载中...',
       emptyLabel: '空空如也',
@@ -306,9 +336,10 @@ extension page_state_widget on Widget{
 
 
   ///页面加载空数据
-  Widget pageStateEmpty() {
+  Widget pageStateEmpty(GlobalKey key,) {
     String msgShow = '空空如也';
     return StateView(
+      key:key,
       state:  LoadState.State_Empty,
       loadingLabel:'加载中...',
       emptyLabel: msgShow,
@@ -318,12 +349,13 @@ extension page_state_widget on Widget{
   }
 
   ///页面加载空数据
-  Widget pageStateEmptyWithRetry(String msg,Function onRetry) {
+  Widget pageStateEmptyWithRetry(GlobalKey key,String msg,Function onRetry) {
     String msgShow = '空空如也';
     if(msg != null) {
       msgShow = msg;
     }
     return StateView(
+      key:key,
       state:  LoadState.State_Empty,
       loadingLabel:'加载中...',
       emptyLabel: msgShow,
