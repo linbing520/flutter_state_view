@@ -15,13 +15,13 @@ class StateView extends StatefulWidget {
 
   LoadState state; //页面状态
   final Widget child;//成功视图
-  final RetryCallback onRetry; //重试
-  final String errorLabel; //失败的自定义提示
-  final String emptyLabel; //空数据的自定义提示
-  final String loadingLabel;//加载中的自定义提示
+  RetryCallback onRetry; //重试
+  String errorLabel; //失败的自定义提示
+  String emptyLabel; //空数据的自定义提示
+  String loadingLabel;//加载中的自定义提示
 
-  final String errorImage; //失败的自定义图片提示
-  final String emptyImage; //空数据的自定义图片提示
+  String errorImage; //失败的自定义图片提示
+  String emptyImage; //空数据的自定义图片提示
 
   final LoadingViewBuilder loadingViewBuilder; //自定义加载中
   final EmptyViewBuilder emptyViewBuilder; //自定义空界面
@@ -52,11 +52,33 @@ class StateView extends StatefulWidget {
     return mState;
   }
 
-  void pageStateLoading() {
-    state = LoadState.State_Loading;
+  StateView configErrorImage(image) {
     GlobalKey gkey = key;
     gkey.currentState.setState(() {
+      errorImage = image;
+    });
+    return this;
+  }
+
+  StateView configEmptyImage(image) {
+    GlobalKey gkey = key;
+    gkey.currentState.setState(() {
+      emptyImage = image;
+    });
+    return this;
+  }
+
+
+  void pageStateLoading(msg) {
+    state = LoadState.State_Loading;
+    GlobalKey gkey = key;
+    String label = '拼命加载中...';
+    if(msg != null) {
+      label = msg;
+    }
+    gkey.currentState.setState(() {
       state = LoadState.State_Loading;
+      loadingLabel = label;
     });
   }
 
@@ -65,6 +87,60 @@ class StateView extends StatefulWidget {
     GlobalKey gkey = key;
     gkey.currentState.setState(() {
       state = LoadState.State_Success;
+    });
+  }
+
+  void pageStateError(msg) {
+    state = LoadState.State_Error;
+    GlobalKey gkey = key;
+    String label = '未知错误';
+    if(msg != null) {
+      label = msg;
+    }
+    gkey.currentState.setState(() {
+      state = LoadState.State_Error;
+      errorLabel = label;
+    });
+  }
+
+  void pageStateErrorWithRetry(msg,retry) {
+    state = LoadState.State_Error;
+    GlobalKey gkey = key;
+    String label = '未知错误';
+    if(msg != null) {
+      label = msg;
+    }
+    gkey.currentState.setState(() {
+      state = LoadState.State_Error;
+      errorLabel = label;
+      onRetry = retry;
+    });
+  }
+
+  void pageStateEmpty(msg) {
+    state = LoadState.State_Empty;
+    GlobalKey gkey = key;
+    String label = '未知错误';
+    if(msg != null) {
+      label = msg;
+    }
+    gkey.currentState.setState(() {
+      state = LoadState.State_Empty;
+      emptyLabel = label;
+    });
+  }
+
+  void pageStateEmptyWithRetry(msg,retry) {
+    state = LoadState.State_Empty;
+    GlobalKey gkey = key;
+    String label = '空空如也';
+    if(msg != null) {
+      label = msg;
+    }
+    gkey.currentState.setState(() {
+      state = LoadState.State_Empty;
+      emptyLabel = label;
+      onRetry = retry;
     });
   }
 
@@ -260,107 +336,15 @@ class StateViewState extends State<StateView> {
 extension page_state_widget on Widget{
 
 
-
-
   ///页面加载中
-  Widget pageStateLoading(GlobalKey key) {
-    String msgShow = '加载中...';
-    return StateView(
-      key:key,
-      state:  LoadState.State_Loading,
-      loadingLabel:msgShow,
-      emptyLabel: '空空如也',
-      errorLabel: '未知错误',
-      child: this,
-    );
-  }
-
-  ///页面加载中
-  Widget pageStateLoadingWithMsg(GlobalKey key,String msg) {
-    String msgShow = '加载中...';
-    if(msg != null) {
-      msgShow = msg;
-    }
-    return StateView(
-      key:key,
-      state:  LoadState.State_Loading,
-      loadingLabel:msgShow,
-      emptyLabel: '空空如也',
-      errorLabel: '未知错误',
-      child: this,
-    );
-  }
-
-  ///页面加载成功
-  Widget pageStateSuccess(GlobalKey key) {
+  Widget pageState() {
+    GlobalKey key = GlobalKey();
     return StateView(
       key:key,
       state:  LoadState.State_Success,
       loadingLabel:'加载中...',
       emptyLabel: '空空如也',
       errorLabel: '未知错误',
-      child: this,
-    );
-  }
-
-  ///页面加载失败
-  Widget pageStateError(GlobalKey key) {
-    String msgShow = '未知错误';
-    return StateView(
-      key:key,
-      state:  LoadState.State_Error,
-      loadingLabel:'加载中...',
-      emptyLabel: '空空如也',
-      errorLabel: msgShow,
-      child: this,
-    );
-  }
-
-  ///页面加载失败
-  Widget pageStateErrorWithRetry(GlobalKey key,String msg,Function onRetry) {
-    String msgShow = '未知错误';
-    if(msg != null) {
-      msgShow = msg;
-    }
-
-    return StateView(
-      key:key,
-      state:  LoadState.State_Error,
-      loadingLabel:'加载中...',
-      emptyLabel: '空空如也',
-      errorLabel: msgShow,
-      onRetry:onRetry,
-      child: this,
-    );
-  }
-
-
-  ///页面加载空数据
-  Widget pageStateEmpty(GlobalKey key,) {
-    String msgShow = '空空如也';
-    return StateView(
-      key:key,
-      state:  LoadState.State_Empty,
-      loadingLabel:'加载中...',
-      emptyLabel: msgShow,
-      errorLabel: '未知错误',
-      child: this,
-    );
-  }
-
-  ///页面加载空数据
-  Widget pageStateEmptyWithRetry(GlobalKey key,String msg,Function onRetry) {
-    String msgShow = '空空如也';
-    if(msg != null) {
-      msgShow = msg;
-    }
-    return StateView(
-      key:key,
-      state:  LoadState.State_Empty,
-      loadingLabel:'加载中...',
-      emptyLabel: msgShow,
-      errorLabel: '未知错误',
-      onRetry:onRetry,
       child: this,
     );
   }
