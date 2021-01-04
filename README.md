@@ -17,6 +17,8 @@ flutter state view with loading，empty，error show
 快捷使用方法：<br/>
 //初始化
         
+    StateView page;
+    
     page = Column(
       mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       Text(
