@@ -16,7 +16,8 @@ flutter state view with loading，empty，error show
         
 快捷使用方法：<br/>
 //初始化
-  page = Column(
+        
+    page = Column(
       mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       Text(
         'You have pushed the button this many times11:',
@@ -27,15 +28,20 @@ flutter state view with loading，empty，error show
       ),
     ],
     ).center().pageState();
-    
-改变状态：
-  page.pageStateLoading("加载中...");
+
+//改变状态：
+  
+    page.pageStateLoading("加载中...");
     Future.delayed(Duration(seconds: 3)).then((value) {
       page.configErrorImage('imgs/empty.png');
       page.pageStateErrorWithRetry("出错了！",(iserror)=>{
         this._incrementCounter()
       });
-    });
+    }); 
+    
+
+
+    
         
 效果图如下：<br/>
 ![image](https://img-blog.csdnimg.cn/20200701170651627.jpg)
